@@ -828,10 +828,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d0248634bbd3e0428575d215f8016e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 3
+  attackCooldown: 2
   triggerRaidus: 4
   attackDistance: 1
-  speed: 30
+  speed: 35
   playerMask:
     serializedVersion: 2
     m_Bits: 128

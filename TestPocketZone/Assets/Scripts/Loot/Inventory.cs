@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour, IDataSaved
 {
-    private KeyValuePair<LootConfig, int> storedLoot = new KeyValuePair<LootConfig, int>(null, 0);
+    private Dictionary<LootConfig, int> storedLoot = new Dictionary<LootConfig, int>();
     private InventoryDisplay inventoryDisplay;
 
     private void Start()
     {
         inventoryDisplay = Root.UIManager.inventory;
-        inventoryDisplay.deleteLootButton.onClick.AddListener(DeleteLoot);
-        if (storedLoot.Key != null)
-            inventoryDisplay.SetUI(storedLoot.Key, storedLoot.Value);
+        inventoryDisplay.deleteLootButton.onClick.AddListener(delegate { DeleteLoot(inventoryDisplay.CurrentDisplayed); });
+        foreach(var item in storedLoot)
+            inventoryDisplay.SetUI(item.Key);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -21,38 +21,40 @@ public class Inventory : MonoBehaviour, IDataSaved
         {
             var loot = other.gameObject.GetComponent<Loot>();
             var config = loot.GetLootConfig;
-            if (storedLoot.Key == null)
+            if (!storedLoot.ContainsKey(config))
             {
-                storedLoot = new KeyValuePair<LootConfig, int>(config, config.amount);
+                storedLoot[config] = config.amount;
                 loot.CollectLoot();
             }
-            else if (storedLoot.Key == config)
+            else if (storedLoot.ContainsKey(config))
             {
-                storedLoot = new KeyValuePair<LootConfig, int>(config, storedLoot.Value + config.amount);
+                storedLoot[config] = storedLoot[config] + config.amount;
                 loot.CollectLoot();
             }
             //open ui
-            inventoryDisplay.SetUI(storedLoot.Key, storedLoot.Value);
+            inventoryDisplay.SetUI(config);
         }
     }
 
-    public void DeleteLoot() => storedLoot = new KeyValuePair<LootConfig, int>(null, 0);
+    public void DeleteLoot(LootConfig config) => storedLoot.Remove(config);
 
     public void LoadData(GameData data)
     {
         foreach (var item in data.inventoryNameToAmount)
         {
             var loot = Resources.Load<LootConfig>(item.Key);
-            storedLoot = new KeyValuePair<LootConfig, int>(loot, item.Value);
+            storedLoot[loot] = item.Value;
         }
     }
 
     public void SaveData(GameData data)
     {
-        if (storedLoot.Key != null)
+        foreach (var item in storedLoot)
         {
-            Debug.Log("Object name: " + storedLoot.Key.name);
-            data.inventoryNameToAmount[storedLoot.Key.name] = storedLoot.Value;
+            Debug.Log("Object name: " + item.Key.name);
+            data.inventoryNameToAmount[item.Key.name] = item.Value;
         }
     }
+
+    public int GetLootAmount(LootConfig config) => storedLoot[config];
 }

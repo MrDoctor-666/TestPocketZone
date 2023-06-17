@@ -782,7 +782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aa42ca4207e8ba4f9220857c50c65d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 30
+  movementSpeed: 40
 --- !u!114 &1648005826285717275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -824,7 +824,7 @@ MonoBehaviour:
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 64
-  radius: 3
+  radius: 2
 --- !u!114 &7150850304579608458
 MonoBehaviour:
   m_ObjectHideFlags: 0
