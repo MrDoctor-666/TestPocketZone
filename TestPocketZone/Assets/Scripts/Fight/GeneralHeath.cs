@@ -14,7 +14,7 @@ public class GeneralHeath : MonoBehaviour, IHealth
     public event Action OnDie;
     public event Action<float> OnTakeDamage;
 
-    private void Start()
+    public void Initialize()
     {
         health = maxHealth;
     }

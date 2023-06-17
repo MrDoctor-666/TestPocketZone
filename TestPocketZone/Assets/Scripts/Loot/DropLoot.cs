@@ -6,7 +6,7 @@ public class DropLoot : MonoBehaviour
 {
     [SerializeField] List<LootConfig> lootConfig;
 
-    private void OnDestroy()
+    public void Drop()
     {
         int index = Random.Range(0, lootConfig.Count);
         var loot = Instantiate(lootConfig[index].prefab, this.transform.position, Quaternion.identity);

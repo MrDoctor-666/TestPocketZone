@@ -13,7 +13,7 @@ public class HealthBar : MonoBehaviour
     private float fullWidth;
 
 
-    private void Start()
+    private void Awake()
     {
         health = GetComponentInParent<IHealth>();
         maxValue = health.MaxHealth;

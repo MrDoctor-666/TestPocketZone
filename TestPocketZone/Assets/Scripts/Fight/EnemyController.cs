@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDataSaved
 {
     [SerializeField] private float attackCooldown = 3f;
     [SerializeField] private float triggerRaidus = 4f;
@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float speed = 3f;
     [SerializeField] private LayerMask playerMask;
 
+    private int indexID;
     private IHealth health;
     private IAttackBehaviour attackBehaviour;
     private State state;
@@ -18,9 +19,11 @@ public class EnemyController : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 movementDirection;
 
-    private void Start()
+    public void Initialize(int index)
     {
+        indexID = index;
         health = GetComponent<IHealth>();
+        health.Initialize();
         attackBehaviour = GetComponent<IAttackBehaviour>();
         state = State.Idle;
 
@@ -75,11 +78,29 @@ public class EnemyController : MonoBehaviour
 
     private void OnDie()
     {
+        GetComponent<DropLoot>().Drop();
         Destroy(this.gameObject);
     }
 
     private void OnDestroy()
     {
         health.OnDie -= OnDie;
+    }
+
+    public void LoadData(GameData data)
+    {
+        if (!data.enemyIndexToHP.ContainsKey(indexID) || data.enemyIndexToHP[indexID] <= 0)
+            Destroy(gameObject);
+        else
+        {
+            health.TakeDamage(health.MaxHealth - data.enemyIndexToHP[indexID]);
+            transform.position = data.enemyIndexToPositions[indexID];
+        }
+    }
+
+    public void SaveData(GameData data)
+    {
+        data.enemyIndexToPositions[indexID] = transform.position;
+        data.enemyIndexToHP[indexID] = health.Health;
     }
 }

@@ -8,12 +8,14 @@ public class InventoryDisplay : MonoBehaviour
 {
     [SerializeField] private Button selectButton;
     [SerializeField] private TextMeshProUGUI amountText;
+    [SerializeField] private Button fullScreenButton;
     public Button deleteLootButton;
 
     private void Start()
     {
         selectButton.onClick.AddListener(OpenDelete);
         deleteLootButton.onClick.AddListener(UnsetUI);
+        fullScreenButton.onClick.AddListener(CloseDelete);
     }
 
     public void SetUI(LootConfig config, int amount)
@@ -37,13 +39,12 @@ public class InventoryDisplay : MonoBehaviour
 
     public void OpenDelete()
     {
-        deleteLootButton.gameObject.SetActive(true);
+        fullScreenButton.gameObject.SetActive(true);
     }
 
-    //need to open somewhere
     public void CloseDelete()
     {
-        deleteLootButton.gameObject.SetActive(false);
+        fullScreenButton.gameObject.SetActive(false);
     }
 
 }

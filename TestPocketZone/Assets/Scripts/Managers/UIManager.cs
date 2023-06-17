@@ -6,13 +6,15 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] GameObject warningShootPanel;
+    [SerializeField] GameObject diedPanel;
     public InventoryDisplay inventory;
     public Button attackButton;
     public FixedJoystick fixedJoystick;
 
     Coroutine currentCoroutine;
 
-    public void OpenPanel()
+
+    public void OpenPanelAndClose()
     {
         if (currentCoroutine != null) StopCoroutine(currentCoroutine);
         warningShootPanel.SetActive(true);
@@ -23,5 +25,10 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(seconds);
         toClose.SetActive(false);
+    }
+
+    public void OpenEndGamePanel()
+    {
+        diedPanel.SetActive(true);
     }
 }

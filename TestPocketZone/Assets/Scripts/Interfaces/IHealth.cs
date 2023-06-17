@@ -7,5 +7,6 @@ public interface IHealth
 
     public event Action OnDie;
     public event Action<float> OnTakeDamage;
+    public void Initialize();
     public void TakeDamage(float damage);
 }

@@ -8,7 +8,6 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] Tilemap tilemap;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] List<GameObject> enemyPrefabs;
-    [SerializeField] int enemyToSpawn = 3;
     [SerializeField] Vector3Int playerSpawn = new Vector3Int(0, 0, 0);
     
     private List<Vector3> tileWorldLocations;
@@ -18,6 +17,14 @@ public class SpawnManager : MonoBehaviour
     {
         tileWorldLocations = new List<Vector3>();
 
+        SpawnPlayer();
+        SpawnEnemies();
+
+        Root.SaveManager.Initialize();
+    }
+
+    private void SpawnPlayer()
+    {
         foreach (var pos in tilemap.cellBounds.allPositionsWithin)
         {
             Vector3Int localPlace = new Vector3Int(pos.x, pos.y, pos.z);
@@ -28,14 +35,19 @@ public class SpawnManager : MonoBehaviour
             }
         }
 
-        Instantiate(playerPrefab, playerSpawn + offset, Quaternion.identity);
+        var player = Instantiate(playerPrefab, playerSpawn + offset, Quaternion.identity);
+        Root.PlayerReference = player.GetComponent<PlayerController>();
+        player.GetComponent<PlayerController>().Initialize();
+    }
 
-        for (int i = 0; i < enemyToSpawn; i++)
+    private void SpawnEnemies()
+    {
+        for (int i = 0; i < enemyPrefabs.Count; i++)
         {
             int indexPlace = Random.Range(0, tileWorldLocations.Count);
-            int indexPrefab = Random.Range(0, enemyPrefabs.Count);
 
-            Instantiate(enemyPrefabs[indexPrefab], tileWorldLocations[indexPlace] + offset, Quaternion.identity);
+            var enemy = Instantiate(enemyPrefabs[i], tileWorldLocations[indexPlace] + offset, Quaternion.identity);
+            enemy.GetComponent<EnemyController>().Initialize(i);
 
             tileWorldLocations.RemoveAt(indexPlace);
         }

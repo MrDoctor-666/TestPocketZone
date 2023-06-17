@@ -20,7 +20,7 @@ public class PlayerAttack : MonoBehaviour, IAttackBehaviour
         //if no one is in radius can do whatever
         if (hitColliders.Length <= 0)
         {
-            Root.UIManager.OpenPanel();
+            Root.UIManager.OpenPanelAndClose();
             return;
         }
         Collider2D chosen = hitColliders[0];
